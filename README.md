@@ -11,10 +11,7 @@ This application is a simple contact management tool built using the Laravel fra
 -   [Development](#development)
 -   [Usage](#usage)
 -   [Technologies Used](#technologies-used)
--   [File Structure](#file-structure)
--   [Deployment](#deployment) (Optional - Add if applicable)
--   [Contributing](#contributing) (Optional)
--   [License](#license) (Optional)
+-   [Future Improvements](#future-improvements)
 
 ## Introduction
 
@@ -46,38 +43,7 @@ The application uses a relational database (PostgreSQL) for data persistence. Ng
     cd contact-management-app
     ```
 
-2.  **Install Dependencies:**
-
-    ```bash
-    composer install
-    ```
-
-3.  **Environment Configuration:**
-
-    -   Copy the `.env.example` file to `.env`:
-
-        ```bash
-        cp .env.example .env
-        ```
-
-    -   Generate the application key:
-
-        ```bash
-        php artisan key:generate
-        ```
-
-    -   Configure the database connection in the `.env` file:
-
-        ```
-        DB_CONNECTION=pgsql
-        DB_HOST=postgres  # Service name in docker-compose
-        DB_PORT=5432
-        DB_DATABASE=laravel
-        DB_USERNAME=root
-        DB_PASSWORD= # Your Postgres password or leave blank if using trust authentication
-        ```
-
-4.  **Docker Setup (Recommended for Development):**
+2.  **Docker Setup (Recommended for Development):**
 
     -   Install Docker and Docker Compose.
     -   Build and run the Docker containers:
@@ -85,7 +51,7 @@ The application uses a relational database (PostgreSQL) for data persistence. Ng
         ```bash
         docker-compose up -d --build
         ```
-    - or you can just start the application in .devcontainer using vs-code reopen in contianer
+    -  you can just start the application in .devcontainer using vs-code reopen in contianer
     -   Access the application at `http://localhost`.
 
 ## Development
@@ -126,31 +92,6 @@ The application uses a relational database (PostgreSQL) for data persistence. Ng
 -   **PHP-FPM:** FastCGI Process Manager.
 -   **Redis:** Caching (Optional).
 -   **Tailwind CSS:** CSS framework.
-
-## File Structure
-
-app/
-├── Http/
-│   ├── Controllers/
-│   │   └── ContactController.php
-│   └── Models/
-│       └── Contact.php
-resources/
-├── views/
-│   ├── contacts/
-│   │   ├── create.blade.php
-│   │   ├── edit.blade.php
-│   │   ├── import.blade.php
-│   │   ├── index.blade.php
-│   │   └── _form.blade.php
-│   └── layouts/
-│       └── app.blade.php
-routes/
-└── web.php
-docker-compose.yml
-nginx/
-└── default.conf
-.env
 
 ## Future Improvements
 

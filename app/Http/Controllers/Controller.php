@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use App\Services\ContactService;
+use Illuminate\Routing\Controller;
+use App\Http\Requests\StoreContactRequest;
+use Illuminate\Http\Request;
 
-class Controller extends BaseController
+class ContactController extends Controller
 {
-    use AuthorizesRequests, ValidatesRequests;
+    protected $contactService;
+
+    public function __construct(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
+    }
+
+    public function store(StoreContactRequest $request)
+    {
+        $validatedData = $request->validated();
+        $contact = $this->contactService->createContact($validatedData);
+        return response()->json($contact, 201);
+    }
 }

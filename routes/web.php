@@ -1,22 +1,21 @@
 <?php
 
-use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\ContactController;
+//use App\Http\Controllers\TestController;
 
 Route::get('/', function () {
-    return redirect()->to('contact');
+    return view('welcome');
 });
 
-Route::resource('/contacts', ContactController::class);
-Route::get('contacts/destroy/{id}', [ContactController::class, 'destroy']);
+Route::get('/contacts/search', [ContactController::class, 'search'])->name('contacts.search');
+
+Route::resource('contacts', ContactController::class); // ONLY ONCE
+
+Route::get('/import-contacts', function () {
+    return view('contacts.import');
+})->name('contacts.import.form');
+
+Route::post('/import-contacts', [ContactController::class, 'import'])->name('contacts.import');
+
+// Route::post('/test-csrf', [TestController::class, 'testCsrf']);

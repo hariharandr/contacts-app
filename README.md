@@ -1,66 +1,153 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Contact Management Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This application is a simple contact management tool built using the Laravel framework, providing functionalities to manage contacts, import contacts from XML files, and search contacts.
 
-## About Laravel
+## Table of Contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   [Introduction](#introduction)
+-   [Architecture](#architecture)
+-   [Features](#features)
+-   [Installation](#installation)
+-   [Development](#development)
+-   [Usage](#usage)
+-   [Technologies Used](#technologies-used)
+-   [File Structure](#file-structure)
+-   [Deployment](#deployment) (Optional - Add if applicable)
+-   [Contributing](#contributing) (Optional)
+-   [License](#license) (Optional)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Introduction
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This application allows users to store, retrieve, update, and delete contact information. It also provides a feature to import contacts from an XML file and a search functionality to quickly find contacts.
 
-## Learning Laravel
+## Architecture
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The application follows the Model-View-Controller (MVC) architectural pattern:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-   **Model:** The `Contact` model interacts with the database to manage contact data.
+-   **View:** Blade templates are used to create the user interface.
+-   **Controller:** The `ContactController` handles user requests, interacts with the model, and selects the appropriate view.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The application uses a relational database (PostgreSQL) for data persistence. Nginx serves as a reverse proxy and web server, and PHP-FPM processes PHP requests. Redis is used for caching (optional, but recommended).
 
-## Laravel Sponsors
+## Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   **Contact Management:** Create, read, update, and delete contacts.
+-   **Import from XML:** Import contacts from an XML file.
+-   **Search:** Search contacts by name, email, or phone.
+-   **Responsive UI:** User interface is responsive and adapts to different screen sizes (using Tailwind CSS).
 
-### Premium Partners
+## Installation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+1.  **Clone the Repository:**
 
-## Contributing
+    ```bash
+    git clone [https://github.com/hariharandr/contacts-app.git](https://github.com/hariharandr/contacts-app.git)
+    cd contact-management-app
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2.  **Install Dependencies:**
 
-## Code of Conduct
+    ```bash
+    composer install
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3.  **Environment Configuration:**
 
-## Security Vulnerabilities
+    -   Copy the `.env.example` file to `.env`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+        ```bash
+        cp .env.example .env
+        ```
 
-## License
+    -   Generate the application key:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+        ```bash
+        php artisan key:generate
+        ```
+
+    -   Configure the database connection in the `.env` file:
+
+        ```
+        DB_CONNECTION=pgsql
+        DB_HOST=postgres  # Service name in docker-compose
+        DB_PORT=5432
+        DB_DATABASE=laravel
+        DB_USERNAME=root
+        DB_PASSWORD= # Your Postgres password or leave blank if using trust authentication
+        ```
+
+4.  **Docker Setup (Recommended for Development):**
+
+    -   Install Docker and Docker Compose.
+    -   Build and run the Docker containers:
+
+        ```bash
+        docker-compose up -d --build
+        ```
+    - or you can just start the application in .devcontainer using vs-code reopen in contianer
+    -   Access the application at `http://localhost`.
+
+## Development
+
+1.  **Start the Development Server (if not using Docker):**
+
+    ```bash
+    php artisan serve
+    ```
+
+2.  **Access the application:** Open your browser and go to `http://localhost:8000`.
+
+3.  **Run Tests (if applicable):**
+
+    ```bash
+    php artisan test
+    ```
+
+## Usage
+
+1.  **Contact List:** Navigate to `/contacts` to view the list of contacts.
+
+2.  **Add Contact:** Click the "Add Contact" button to add a new contact.
+
+3.  **Edit Contact:** Click the "Edit" link next to a contact to edit its information.
+
+4.  **Delete Contact:** Click the "Delete" button next to a contact to delete it.
+
+5.  **Import Contacts:** Navigate to `/import-contacts` to import contacts from an XML file.
+
+6.  **Search Contacts:** Use the search bar in the sidebar to search for contacts.
+
+## Technologies Used
+
+-   **Laravel:** PHP framework.
+-   **PostgreSQL:** Relational database.
+-   **Nginx:** Web server and reverse proxy.
+-   **PHP-FPM:** FastCGI Process Manager.
+-   **Redis:** Caching (Optional).
+-   **Tailwind CSS:** CSS framework.
+
+## File Structure
+
+app/
+├── Http/
+│   ├── Controllers/
+│   │   └── ContactController.php
+│   └── Models/
+│       └── Contact.php
+resources/
+├── views/
+│   ├── contacts/
+│   │   ├── create.blade.php
+│   │   ├── edit.blade.php
+│   │   ├── import.blade.php
+│   │   ├── index.blade.php
+│   │   └── _form.blade.php
+│   └── layouts/
+│       └── app.blade.php
+routes/
+└── web.php
+docker-compose.yml
+nginx/
+└── default.conf
+.env

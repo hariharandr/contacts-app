@@ -14,9 +14,9 @@ class ContactControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artisan('migrate:fresh --seed'); // Refresh the database before each test
-        $user = User::factory()->create(); // Create a user (or use an existing one)
-        $this->actingAs($user); // Authenticate the user for the test
+        $this->artisan('migrate:fresh --seed');
+        $user = User::factory()->create();
+        $this->actingAs($user);
     }
     public function testIndex()
     {

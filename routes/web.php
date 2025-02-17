@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to('contact');
 });
+
+Route::resource('/contacts', ContactController::class);
+Route::get('contacts/destroy/{id}', [ContactController::class, 'destroy']);

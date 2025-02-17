@@ -110,29 +110,32 @@ Schema::create('contacts', function (Blueprint $table) {
     $table->string('phone');
     $table->timestamps();
 });
+```
+
 2. Queues for XML Imports:
 
 For large XML files, I would implement queues to handle imports in the background, preventing timeouts and improving performance.
 
-PHP
-
+```PHP
 // Example job (app/Jobs/ImportContacts.php)
 ImportContacts::dispatch($xmlData);
+```
 3. Enhanced Caching:
 
 While Redis is used for session caching, I would implement more aggressive caching for frequently accessed data (e.g., the contact list) to further optimize performance.
 
-PHP
-
+```PHP
 // Example caching
 $contacts = Cache::remember('all_contacts', now()->addMinutes(60), function () {
     return Contact::all();
 });
+```
+
 4. API Development:
 
 I would create API resources and controllers to provide a clean API for accessing contact data.
 
-PHP
+```PHP
 
 // Example API resource (app/Http/Resources/ContactResource.php)
 return [
@@ -140,6 +143,8 @@ return [
     'name' => $this->name,
     // ...
 ];
+```
+
 5. Testing (Unit and Feature Tests):
 
 Thorough testing is essential. I would write unit tests for the ContactService and feature tests for the ContactController to ensure the application's reliability and prevent regressions.

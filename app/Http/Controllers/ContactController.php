@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use SimpleXMLElement;
 use Exception;
+use App\Services\ContactService;
+use Illuminate\Support\Facades\Session;
 
 /**
  * ContactController handles all operations related to contacts.
@@ -18,6 +20,13 @@ use Exception;
  */
 class ContactController extends Controller
 {
+    protected $contactService;
+
+    public function __construct(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
+    }
+
     /**
      * Displays a list of all contacts.
      *
@@ -25,7 +34,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::all();
+        $contacts = $this->contactService->getAllContacts();
         return view('contacts.index', compact('contacts'));
     }
 
@@ -48,7 +57,7 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:255',
         ]);
@@ -79,7 +88,7 @@ class ContactController extends Controller
     public function update(Request $request, Contact $contact)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:255',
         ]);
@@ -109,24 +118,33 @@ class ContactController extends Controller
      */
     public function import(Request $request)
     {
-        $request->validate([
-            'xml_file' => 'required|file|mimes:xml',
-        ]);
-
         try {
+            $validatedData = $request->validate([
+                'xml_file' => 'required|file|mimes:xml',
+            ]);
             $file = $request->file('xml_file');
             $path = $file->store('xml_uploads');
             $xmlData = file_get_contents(storage_path('app/' . $path));
 
-            $importedContacts = $this->importFromXML($xmlData);
+            $importedContacts = $this->contactService->importFromXML($xmlData);
 
-            return redirect()->route('contacts.index')->with('success', 'Contacts imported successfully!');
+            // Success message with count
+            Session::flash('success', count($importedContacts) . ' contacts imported successfully!');
+
+            return redirect()->route('contacts.index');
         } catch (ValidationException $e) {
-            Log::error("Import validation failed: " . $e->getMessage());
-            return back()->withErrors($e->errors());
-        } catch (\Exception $e) {
-            Log::error("Import failed: " . $e->getMessage());
-            return back()->with('error', 'Failed to import contacts. Please check the logs for details.');
+            // More specific error messages for validation
+            foreach ($e->errors() as $field => $messages) {
+                foreach ($messages as $message) {
+                    Session::flash('error', $message); // Flash each error message
+                }
+            }
+            return back()->withInput();
+        } catch (Exception $e) { // Catch general Exception
+            Log::error("Import failed: " . $e->getMessage()); // Log the detailed error
+
+            Session::flash('error', 'An error occurred during import. Please check the logs for details.');
+            return back()->withInput();
         }
     }
 

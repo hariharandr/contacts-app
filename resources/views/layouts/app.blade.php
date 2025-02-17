@@ -3,7 +3,8 @@
 <head>
     <title>Contact Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">  </head>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+</head>
 <body class="bg-gray-100 h-screen">
 
     <header class="bg-blue-500 text-white p-4">
@@ -32,7 +33,22 @@
 
         <main class="flex-grow p-6 overflow-y-auto">
             <div class="container mx-auto">
+
+                {{-- Flash Messages --}}
+                @if (Session::has('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+                        {{ Session::get('success') }}
+                        {{ Session::forget('success') }}  </div>
+                @endif
+
+                @if (Session::has('error'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                        {{ Session::get('error') }}
+                        {{ Session::forget('error') }}  </div>
+                @endif
+
                 @yield('content')
+
             </div>
         </main>
     </div>
